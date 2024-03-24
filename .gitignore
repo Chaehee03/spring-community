@@ -37,4 +37,4 @@ out/
 .vscode/
 
 # ignore application file
-src/**/**/application-secret.yml
+src/**/**/application.yml
