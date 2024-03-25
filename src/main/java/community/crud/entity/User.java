@@ -1,4 +1,4 @@
-package community.crud.domain;
+package community.crud.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
