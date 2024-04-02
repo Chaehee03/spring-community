@@ -1,29 +1,33 @@
 package community.crud.entity;
 
-import community.crud.dto.ArticleDTO;
+import community.crud.dto.article.ArticleRequest;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
+@Table(name = "article")
 @Getter @Setter
+@SQLDelete(sql = "UPDATE article SET deleted = true WHERE id = ?")
+@Where(clause = "deleted = false")
 public class Article extends BaseEntity{
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "article_id")
     private Long id;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
-    @Column(length = 20, nullable = false)
     private User user;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "category_id")
     private Category category;
 
@@ -38,23 +42,22 @@ public class Article extends BaseEntity{
     @Column(length = 500)
     private String paragraph;
 
-    private int like;
+    private int likes;
     private int views;
 
+    private boolean deleted = Boolean.FALSE;
+
     // DTO -> entity
-    public static Article toSaveEntity(ArticleDTO articleDTO) {
+    public static Article toSaveEntity(ArticleRequest articleDTO) {
         Article article = new Article();
-        article.setUser(articleDTO.getUser());
         article.setTitle(articleDTO.getTitle());
         article.setParagraph(articleDTO.getParagraph());
-        article.setCategory(article.getCategory());
-        article.setLike(0);
-        article.setViews(0);
-        article.setComments(articleDTO.getComments());
-        article.setPhotos(articleDTO.getPhotos());
+        Category category = new Category();
+        category.setCategoryName(articleDTO.getCategory());
+        article.setCategory(category);
+        User user = new User();
+        user.setUserName(articleDTO.getUser());
+        article.setUser(user);
         return article;
-    }
-
-    public void delete() {
     }
 }
