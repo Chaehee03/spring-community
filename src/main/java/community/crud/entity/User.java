@@ -18,6 +18,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Article> articles = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comments = new ArrayList<>();
+
     @NotNull
     private String userName;
     private String password;
