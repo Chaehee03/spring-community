@@ -31,7 +31,7 @@ public class Article extends BaseEntity{
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "article", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "article")
